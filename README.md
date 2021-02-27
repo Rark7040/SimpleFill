@@ -19,8 +19,8 @@
 | /sfundo <number> | /su < number> | <number>に書かれた数だけ操作を取り消します|  
   
 ## Config  
-｜ 設定項目 | 値 | 説明 |<br>
+｜ 設定項目 | 値 | 説明 |
 |---|---|---|
-| UseType | <true or false> | Tapをtrueにするとアイテムをもって右クリックで、<br>スニークだとアイテムをもってスニークでFillモードを切り替え |<br>
-| SaveSize | <number> | Undoが可能なFill履歴の保存サイズです |<br>
+| UseType | <true or false> | Tapをtrueにするとアイテムをもって右クリックで、<br>スニークだとアイテムをもってスニークでFillモードを切り替え |
+| SaveSize | <number> | Undoが可能なFill履歴の保存サイズです |
 
