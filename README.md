@@ -11,7 +11,8 @@
 [youtube link](https://youtu.be/E-6aQ4tCY0g)
 
 ## Command
-| TH1 | TH2 |
-|----|----|
-| TD1 | TD3 |
-| TD2 | TD4 |
+| コマンド | エイリアス | 説明 |
+|---|---|---|
+| /simplefill | /sf | Fillモードを切り替えるアイテムをプレイヤーに付与します |
+| /sfundo <number> | /su < number> | <number>に書かれた数だけ操作を取り消します[^1]|
+  [^1]:数字が入力されていない場合は一回分巻き戻されます
