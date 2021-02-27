@@ -48,7 +48,7 @@ final class Main extends PluginBase{
 				'Sneak' => false,
 				'Tap' => true
 			],
-			'SaveQueue' => 15
+			'SaveSize' => 15
 		]);
 	}
 
