@@ -11,6 +11,7 @@
 [youtube link](https://youtu.be/E-6aQ4tCY0g)
 
 ## Command
-｜test｜test｜test｜
-|:-:|:-:|:-:|
-||||
+| TH1 | TH2 |
+----|---- 
+| TD1 | TD3 |
+| TD2 | TD4 |
