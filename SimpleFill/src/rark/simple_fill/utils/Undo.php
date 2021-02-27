@@ -22,7 +22,7 @@ final class Undo{
 		}
 		$this->data[$name][] = [$player->getLevel(), $blocks, $tiles_data];
 
-		if(count($this->data[$name]) > Main::$config->get('SaveQueue')){
+		if(count($this->data[$name]) > Main::$config->get('SaveSize')){
 			$this->data = array_slice($this->data, 1);
 		}
 	}
