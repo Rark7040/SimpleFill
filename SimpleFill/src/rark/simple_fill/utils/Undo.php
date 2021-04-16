@@ -9,8 +9,8 @@ use rark\simple_fill\Main;
 
 
 final class Undo{
-	/** @var array */
-	public $data = [];
+	/** @var mixed[] */
+	public array $data = [];
 
 	public function reportFillData(Player $player, array $blocks, array $tiles){
 		$name = $player->getName();
@@ -18,12 +18,13 @@ final class Undo{
 
 		foreach($tiles as $tile){
 			$tiles_data[] = [get_class($tile), $tile->saveNBT()];
-			unset($tile);
 		}
-		$this->data[$name][] = [$player->getLevel(), $blocks, $tiles_data];
+        $log = $this->data[$name]??[];
+		array_unshift($log, [$player->getLevel(), $blocks, $tiles_data]);
+		$this->data[$name] = $log;
 
-		if(count($this->data[$name]) > Main::$config->get('SaveSize')){
-			$this->data = array_slice($this->data, 1);
+		if(count($this->data[$name]) > Main::getConfigFile()->get('Undo')){
+			unset($this->data[Main::getConfigFile()->get('Undo')+1]);
 		}
 	}
 
@@ -34,7 +35,6 @@ final class Undo{
 			$player->sendMessage(Main::HEADER.'§c履歴がありません');
 			return;
 		}
-		$log = array_reverse($this->data[$name]);
 
 		/**
 		 * @var Level $data[0]
@@ -43,7 +43,7 @@ final class Undo{
 		*/
 		for($amount = 0; $value !== 0; --$value){
 			++$amount;
-			$data = $log[0];
+			$data = current($this->data[$name]);
 
 			foreach($data[1] as $block){
 				$data[0]->setBlock($block, clone $block);
@@ -52,8 +52,7 @@ final class Undo{
 			foreach($data[2] as $tile_data){
 				new $tile_data[0]($data[0], $tile_data[1]);
 			}
-
-			$this->data[$name] = array_slice($this->data[$name], 0, -1);
+			array_shift($this->data[$name]);
 
 			if(!isset($this->data[$name][0])){
 				unset($this->data[$name]);

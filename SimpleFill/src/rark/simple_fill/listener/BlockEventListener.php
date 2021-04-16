@@ -4,25 +4,28 @@ declare(strict_types = 1);
 
 namespace rark\simple_fill\listener;
 
-use pocketmine\event\Listener;
-use pocketmine\Player;
-use pocketmine\block\Block;
-use pocketmine\event\block\{
-	BlockBreakEvent,
-	BlockPlaceEvent
+use pocketmine\{
+	Player,
+	event\Listener,
+	event\block\BlockBreakEvent,
+	event\block\BlockPlaceEvent,
+	block\Block,
+	scheduler\ClosureTask,
+	math\Vector3
 };
-use pocketmine\scheduler\Task;
-use pocketmine\math\Vector3;
-use rark\simple_fill\Main;
-use rark\simple_fill\utils\Fill;
+use rark\simple_fill\{
+	Main,
+	utils\Fill
+};
 use function rark\simple_fill\utils\sound;
 
 
 final class BlockEventListener implements Listener{
 
 	public function onBreak(BlockBreakEvent $event):void{
+        $items = Main::getItems();
 
-		if($event->getItem()->getCustomName() === Main::$item->getCustomName()){
+		if($event->getItem()->getCustomName() === $items[0]->getCustomName()){
 			$event->setCancelled();
 		}
 	}
@@ -30,38 +33,27 @@ final class BlockEventListener implements Listener{
 	public function onPlace(BlockPlaceEvent $event):void{
 		$player = $event->getPlayer();
 
-		if(!Main::$fill->isRegisteredPlayer($player)){
-			return;
-		}
-
+		if(!Main::getFill()->isRegisteredPlayer($player)) return;
 		$before = $event->getBlockReplaced();
 		$name = $player->getName();
 		sound($player);
 
-		if(is_bool(Main::$fill->data[$name]['pos1'])){
+		if(is_bool(Main::getFill()->data[$name]['pos1'])){
 			$player->sendMessage(Main::HEADER.'§a起点をセット');
-			Main::$fill->data[$name]['pos1'] = $before;
+			Main::getFill()->data[$name]['pos1'] = $before;
 
 		}else{
-			Main::$fill->data[$name]['pos2'] = $before;
+			$v = $event->getBlock();
+			Main::getFill()->data[$name]['pos2'] = $before;
 			$player->sendMessage(Main::HEADER.'§aFill!');
-			Main::$instance->getScheduler()->scheduleDelayedTask(new Class($player, $event->getBlock()) extends Task{
-					/** @var Player */
-					private $player;
-					/** @var Vector3 */
-					private $v;
-
-					public function __construct(Player $player, Vector3 $v){
-						$this->player = $player;
-						$this->v = $v;
+			Main::getSchedulerInstance()->scheduleDelayedTask(
+				new ClosureTask(
+					function(int $tick) use ($player, $v):void{
+						$block = $player->getLevel()->getBlock($v);
+						Main::getFill()->do($player, $block);
 					}
-
-					public function onRun(int $tick){
-						$block = $this->player->getLevel()->getBlock($this->v);
-						Main::$fill->do($this->player, $block);
-					}
-				},
-				1
+				),
+                1
 			);
 		}
 	}

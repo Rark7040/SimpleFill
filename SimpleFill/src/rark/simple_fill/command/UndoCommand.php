@@ -10,6 +10,7 @@ use pocketmine\plugin\Plugin;
 use rark\simple_fill\Main;
 use function rark\simple_fill\utils\sound;
 
+
 final class UndoCommand extends PluginCommand{
 
 	public function __construct(Plugin $plugin){
@@ -34,6 +35,6 @@ final class UndoCommand extends PluginCommand{
 			}
 		}
 		sound($sender);
-		Main::$undo->undo($sender, $value);
+		Main::getUndo()->undo($sender, $value);
 	}
 }

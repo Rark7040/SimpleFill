@@ -17,6 +17,7 @@ final class FillCommand extends PluginCommand{
 		parent::__construct('simplefill', $plugin);
 		$this->setAliases(['sf']);
 		$this->setDescription(Main::HEADER.'Fillモードを切り替えるアイテムを付与');
+		$this->setUsage('simplefill ?<on|off>');
 	}
 
 	public function execute(CommandSender $sender, string $command, array $args){
@@ -24,11 +25,29 @@ final class FillCommand extends PluginCommand{
 			$sender->sendMessage(Main::HEADER.'§c実行権限がありません');
 			return;
 		}
-		$inventory = $sender->getInventory();
+		if(count($args) === 1){
+			$is_on = $args[0] === 'on';
+			$is_off = $args[0] === 'off';
 
-		if($inventory->canAddItem(Main::$item)){
+			if($is_on or $is_off){
+				$is_on?
+					Main::getFill()->registerPlayer($sender):
+					Main::getFill()->unregisterPlayer($sender);
+				$sender->sendMessage(
+                	$is_on?
+						Main::HEADER.'§aFillモードをONにしました':
+                  		Main::HEADER.'§bFillモードをOFFにしました'
+                );
+                sound($sender);
+                return;
+            }
+		}
+		$inventory = $sender->getInventory();
+		$items = Main::getItems();
+
+		if($inventory->canAddItem($items[0]) and $inventory->canAddItem($items[1])){
 			sound($sender);
-			$inventory->addItem(Main::$item);
+			$inventory->addItem($items[0], $items[1]);
 		}
 	}
 }

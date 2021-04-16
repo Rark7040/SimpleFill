@@ -4,28 +4,36 @@ declare(strict_types = 1);
 
 namespace rark\simple_fill;
 
-use pocketmine\plugin\PluginBase;
-use pocketmine\item\Item;
-use pocketmine\event\Listener;
-use pocketmine\utils\Config;
-use rark\simple_fill\listener\{PlayerEventListener, BlockEventListener};
-use rark\simple_fill\command\{FillCommand, UndoCommand};
-use rark\simple_fill\utils\{Fill, Undo};
-
+use pocketmine\{
+	plugin\PluginBase,
+	event\Listener,
+	item\Item,
+	item\ItemIds,
+	utils\Config,
+    scheduler\TaskScheduler
+};
+use rark\simple_fill\{
+	listener\BlockEventListener,
+	listener\PlayerEventListener,
+	command\FillCommand,
+	command\UndoCommand,
+	utils\Fill,
+	utils\Undo
+};
 
 final class Main extends PluginBase{
 	/** @var string */
 	public const HEADER = '[SimpleFill]';
-	/** @var self */
-	public static $instance;
-	/** @var Item */
-	public static $item;
-	/** @var Fill */
-	public static $fill;
-	/** @var Undo */
-	public static $undo;
-	/** @var Config */
-	public static $config;
+	/** @var pocketmine\item\Item[] */
+	private static array $items = [];
+	/** @var rark\simple_fill\utils\Fill */
+	private static $fill;
+	/** @var rark\simple_fill\utils\Undo */
+	private static $undo;
+	/** @var pocketmine\utils\Config */
+	private static $config;
+    
+    private static $scheduler;
 
 	public function onEnable(){
 		$this->setObject();
@@ -35,10 +43,31 @@ final class Main extends PluginBase{
 		$this->loadFile();
 	}
 
+	public static function getFill():Fill{
+		return self::$fill;
+	}
+
+	public static function getUndo():Undo{
+		return self::$undo;
+	}
+
+	public static function getConfigFile():Config{
+		return self::$config;
+	}
+
+	/** @return pocketmine\item\Item[] */
+	public static function getItems():array{
+		return self::$items;
+	}
+    
+    public static function getSchedulerInstance():TaskScheduler{
+        return self::$scheduler;
+    }
+
 	private function setObject():void{
-		self::$instance = $this;
 		self::$fill = new Fill;
 		self::$undo = new Undo;
+        self::$scheduler = $this->getScheduler();
 		$this->setItem();
 	}
 
@@ -48,19 +77,17 @@ final class Main extends PluginBase{
 				'Sneak' => false,
 				'Tap' => true
 			],
-			'SaveSize' => 15
+			'Undo' => 15
 		]);
 	}
 
 	private function setItem():void{
-		$item = Item::get(450);
-		$item->setCustomName('§aSwitchFillMode');
-		$item->setLore([
-			'タップでON/OFF切り替え',
-			'ON状態の時にブロックを',
-			'二か所に設置で設置でFill'
-		]);
-		self::$item = $item;
+		self::$items[] = Item::get(ItemIds::TOTEM);
+		self::$items[0]->setCustomName('§aSwitchFillMode');
+		self::$items[0]->setLore(['タップでON/OFF切り替え', 'ON状態の時にブロックを二か所に設置でFill']);
+		self::$items[] = Item::get(ItemIds::PHANTOM_MEMBRANE);
+		self::$items[1]->setCustomName('§aAirFill');
+		self::$items[1]->setLore(['二か所タップで範囲内を空気で満たす']);
 	}
 
 	private function registerListener():void{

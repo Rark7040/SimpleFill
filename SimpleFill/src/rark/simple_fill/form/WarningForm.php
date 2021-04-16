@@ -12,11 +12,11 @@ use rark\simple_fill\Main;
 
 
 final class WarningForm implements Form{
-	/** @var array */
-	private $blocks;
-	/** @var array */
+	/** @var pocketmine\block\Block[] */
+	private array $blocks;
+	/** @var pocketmine\tile\Tile[] */
 	private $tiles;
-	/** @var Block */
+	/** @var pocketmine\block\Block */
 	private $block;
 
 	public function __construct(array $blocks, array $tiles, Block $block){
@@ -29,7 +29,7 @@ final class WarningForm implements Form{
 		return [
 			'type' => 'modal',
 			'title' => '§c警告',
-			'content' => $this->getText(),
+			'content' => '現在実行しようとしているFillのブロック数は'.count($this->blocks).'です。'."\n".'Fillを続行しますか？',
 			'button1' => '続行',
 			'button2' => '中止'
 		];
@@ -37,15 +37,11 @@ final class WarningForm implements Form{
 
 	public function handleResponse(Player $player, $data):void{
 		if($data){
-			Main::$fill->setBlocks($player, $this->blocks, $this->tiles, $this->block);
+			Main::getFill()->setBlocks($player, $this->blocks, $this->tiles, $this->block);
 
 		}else{
 			$player->sendMessage(Main::HEADER.'§c処理を中断しました');
-			Main::$fill->registerPlayer($player);
+			Main::getFill()->registerPlayer($player);
 		}
-	}
-
-	private function getText():string{
-		return '現在実行しようとしているFillのブロック数は'.count($this->blocks).'です。'."\n".'Fillを続行しますか？';
 	}
 }

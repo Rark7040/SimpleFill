@@ -4,13 +4,16 @@ declare(strict_types = 1);
 
 namespace rark\simple_fill\utils;
 
-use pocketmine\Player;
-use pocketmine\block\Block;
-use pocketmine\level\Level;
-use pocketmine\math\Vector3;
-use rark\simple_fill\Main;
-use rark\simple_fill\form\WarningForm;
-
+use pocketmine\{
+	Player,
+	block\Block,
+	level\Level,
+	math\Vector3
+};
+use rark\simple_fill\{
+	Main,
+	form\WarningForm
+};
 
 final class Fill{
 
@@ -22,8 +25,8 @@ final class Fill{
 	private const ERROR_POS2_NOT_FOUND = 4;
 	private const NO_ERROR = 5;
 
-	/** @var array */
-	public $data = [];
+	/** @var mixed[] */
+	public array $data = [];
 
 	public function registerPlayer(Player $player){
 		$this->data[$player->getName()] = [
@@ -42,7 +45,6 @@ final class Fill{
 		}
 		unset($this->data[$player->getName()]);
 	}
-
 
 	private function canDo(Player $player):int{
 		$name = $player->getName();
@@ -91,7 +93,7 @@ final class Fill{
 	}
 
 	private function fill(Player $player, Block $block):void{
-		Main::$fill->getLevelData($player, $blocks, $tiles);
+		$this->getLevelData($player, $blocks, $tiles);
 
 		if(count($blocks) >= 1000){
 			$player->sendForm(new WarningForm($blocks, $tiles, $block));
@@ -99,7 +101,6 @@ final class Fill{
 		}
 		$this->setBlocks($player, $blocks, $tiles, $block);
 	}
-
 
 	public function getLevelData(Player $player, &$blocks, &$tiles):void{
 		$level = $player->getLevel();
@@ -124,6 +125,7 @@ final class Fill{
 		foreach($level->getTiles() as $tile){
 			if(in_region($tile, $pos1, $pos2)){
 				$tiles[] = $tile;
+				unset($tile);
 			}
 		}
 	}
@@ -134,7 +136,7 @@ final class Fill{
 		foreach($positions as $pos){
 			$level->setBlock($pos, $block);
 		}
-		Main::$undo->reportFillData($player, $positions, $tiles);
+		Main::getUndo()->reportFillData($player, $positions, $tiles);
 		$this->registerPlayer($player);
 	}
 }
