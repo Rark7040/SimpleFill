@@ -5,20 +5,15 @@ declare(strict_types = 1);
 namespace rark\simple_fill\listener;
 
 use pocketmine\{
-	Player,
 	event\Listener,
 	event\block\BlockBreakEvent,
 	event\block\BlockPlaceEvent,
-	block\Block,
 	scheduler\ClosureTask,
-	math\Vector3
 };
 use rark\simple_fill\{
 	Main,
-	utils\Fill
 };
 use function rark\simple_fill\utils\sound;
-
 
 final class BlockEventListener implements Listener{
 
@@ -26,7 +21,7 @@ final class BlockEventListener implements Listener{
         $items = Main::getItems();
 
 		if($event->getItem()->getCustomName() === $items[0]->getCustomName()){
-			$event->setCancelled();
+			$event->cancel();
 		}
 	}
 
@@ -36,7 +31,7 @@ final class BlockEventListener implements Listener{
 		if(!Main::getFill()->isRegisteredPlayer($player)) return;
 		$before = $event->getBlockReplaced();
 		$name = $player->getName();
-		sound($player);
+		sound($player->getPosition());
 
 		if(is_bool(Main::getFill()->data[$name]['pos1'])){
 			$player->sendMessage(Main::HEADER.'§a起点をセット');
@@ -48,8 +43,8 @@ final class BlockEventListener implements Listener{
 			$player->sendMessage(Main::HEADER.'§aFill!');
 			Main::getSchedulerInstance()->scheduleDelayedTask(
 				new ClosureTask(
-					function(int $tick) use ($player, $v):void{
-						$block = $player->getLevel()->getBlock($v);
+					function() use($player, $v):void{
+						$block = $player->getPosition()->getWorld()->getBlock($v->getPosition());
 						Main::getFill()->do($player, $block);
 					}
 				),

@@ -5,22 +5,23 @@ declare(strict_types = 1);
 namespace rark\simple_fill\command;
 
 use pocketmine\command\{PluginCommand, CommandSender};
-use pocketmine\Player;
-use pocketmine\plugin\Plugin;
+use pocketmine\player\Player;
+use pocketmine\plugin\PluginBase;
+use pocketmine\Server;
 use rark\simple_fill\Main;
 use function rark\simple_fill\utils\sound;
 
 
 final class UndoCommand extends PluginCommand{
 
-	public function __construct(Plugin $plugin){
-		parent::__construct('sfundo', $plugin);
+	public function __construct(PluginBase $plugin){
+		parent::__construct('sfundo', $plugin, $plugin);
 		$this->setAliases(['su']);
 		$this->setDescription(Main::HEADER.'操作を取り消す');
 	}
 
 	public function execute(CommandSender $sender, string $command, array $args){
-		if(!$sender instanceof Player or !$sender->isOp()){
+		if(!$sender instanceof Player or !Server::getInstance()->isOp($sender->getName())){
 			$sender->sendMessage(Main::HEADER.'§c実行権限がありません');
 			return;
 		}
@@ -34,7 +35,7 @@ final class UndoCommand extends PluginCommand{
 				return;
 			}
 		}
-		sound($sender);
+		sound($sender->getPosition());
 		Main::getUndo()->undo($sender, $value);
 	}
 }

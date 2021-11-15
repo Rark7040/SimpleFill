@@ -12,6 +12,7 @@ use pocketmine\{
 	utils\Config,
     scheduler\TaskScheduler
 };
+use pocketmine\item\VanillaItems;
 use rark\simple_fill\{
 	listener\BlockEventListener,
 	listener\PlayerEventListener,
@@ -24,18 +25,18 @@ use rark\simple_fill\{
 final class Main extends PluginBase{
 	/** @var string */
 	public const HEADER = '[SimpleFill]';
-	/** @var pocketmine\item\Item[] */
+	/** @var Item[] */
 	private static array $items = [];
-	/** @var rark\simple_fill\utils\Fill */
+	/** @var Fill */
 	private static $fill;
-	/** @var rark\simple_fill\utils\Undo */
+	/** @var Undo */
 	private static $undo;
-	/** @var pocketmine\utils\Config */
+	/** @var Config */
 	private static $config;
     
     private static $scheduler;
 
-	public function onEnable(){
+	protected function onEnable():void{
 		$this->setObject();
 		$this->createConfig();
 		$this->registerListener();
@@ -55,7 +56,7 @@ final class Main extends PluginBase{
 		return self::$config;
 	}
 
-	/** @return pocketmine\item\Item[] */
+	/** @return Item[] */
 	public static function getItems():array{
 		return self::$items;
 	}
@@ -82,10 +83,10 @@ final class Main extends PluginBase{
 	}
 
 	private function setItem():void{
-		self::$items[] = Item::get(ItemIds::TOTEM);
+		self::$items[] = VanillaItems::TOTEM();
 		self::$items[0]->setCustomName('§aSwitchFillMode');
 		self::$items[0]->setLore(['タップでON/OFF切り替え', 'ON状態の時にブロックを二か所に設置でFill']);
-		self::$items[] = Item::get(ItemIds::PHANTOM_MEMBRANE);
+		self::$items[] = VanillaItems::CHEMICAL_SUGAR();
 		self::$items[1]->setCustomName('§aAirFill');
 		self::$items[1]->setLore(['二か所タップで範囲内を空気で満たす']);
 	}

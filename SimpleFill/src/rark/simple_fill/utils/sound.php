@@ -4,14 +4,10 @@ declare(strict_types = 1);
 
 namespace rark\simple_fill\utils;
 
-use pocketmine\level\Position;
-
+use pocketmine\world\Position;
+use pocketmine\world\sound\NoteInstrument;
+use pocketmine\world\sound\NoteSound;
 
 function sound(Position $pos):void{
-	$level = $pos->getLevel();
-
-	if(is_null($level)){
-		return;
-	}
-	$level->broadcastLevelSoundEvent($pos, 81);
+	$pos->getWorld()->addSound($pos, new NoteSound(NoteInstrument::PIANO(), 10));
 }

@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace rark\simple_fill\utils;
 
-use pocketmine\Player;
+use pocketmine\player\Player;
 use rark\simple_fill\Main;
 
 
@@ -20,7 +20,7 @@ final class Undo{
 			$tiles_data[] = [get_class($tile), $tile->saveNBT()];
 		}
         $log = $this->data[$name]??[];
-		array_unshift($log, [$player->getLevel(), $blocks, $tiles_data]);
+		array_unshift($log, [$player->getPosition()->getWorld(), $blocks, $tiles_data]);
 		$this->data[$name] = $log;
 
 		if(count($this->data[$name]) > Main::getConfigFile()->get('Undo')){

@@ -5,19 +5,18 @@ declare(strict_types = 1);
 namespace rark\simple_fill\listener;
 
 use pocketmine\{
-	Player,
 	item\Item,
 	block\Air,
 	event\Listener,
 	event\player\PlayerQuitEvent,
 	event\player\PlayerInteractEvent,
 	event\player\PlayerDropItemEvent,
-	event\player\PlayerToggleSneakEvent
+	event\player\PlayerToggleSneakEvent,
+    Server
 };
-use rark\simple_fill\{
-	Main,
-	utils\Fill
-};
+use pocketmine\block\VanillaBlocks;
+use pocketmine\player\Player;
+use rark\simple_fill\Main;
 use function rark\simple_fill\utils\sound;
 
 
@@ -27,17 +26,17 @@ final class PlayerEventListener implements Listener{
 
 	public function __construct(){
 		$this->use_fill_item = function(Player $player, Item $item):void{
-			if($item->getCustomName() !== Main::getItems()[0]->getCustomName() or !$player->isOp()){
+			if($item->getCustomName() !== Main::getItems()[0]->getCustomName() or !Server::getInstance()->isOp($player->getName())){
 				return;
 			}
 
 			if(Main::getFill()->isRegisteredPlayer($player)){
-				sound($player);
+				sound($player->getPosition());
 				Main::getFill()->unregisterPlayer($player);
 				$player->sendMessage(Main::HEADER.'§bFillモードをOFFにしました');
 
 			}else{
-				sound($player);
+				sound($player->getPosition());
 				Main::getFill()->registerPlayer($player);
 				$player->sendMessage(Main::HEADER.'§aFillモードをONにしました');
 			}
@@ -67,7 +66,7 @@ final class PlayerEventListener implements Listener{
 			if(!Main::getFill()->isRegisteredPlayer($player)) return;
 			$block = $event->getBlock();
 			$name = $player->getName();
-			sound($player);
+			sound($player->getPosition());
 
 			if(is_bool(Main::getFill()->data[$name]['pos1'])){
 				$player->sendMessage(Main::HEADER.'§a起点をセット');
@@ -76,7 +75,7 @@ final class PlayerEventListener implements Listener{
 			}else{
 				$fill->data[$name]['pos2'] = $block;
 				$player->sendMessage(Main::HEADER.'§aFill!');
-				$fill->do($player, new Air);
+				$fill->do($player, VanillaBlocks::AIR());
 			}
 		}
 		if(!Main::getConfigFile()->get('UseType')['Tap']){
@@ -92,7 +91,7 @@ final class PlayerEventListener implements Listener{
 
 		if($item->getCustomName() === $items[0]->getCustomName() or $item->getCustomName() === $items[1]->getCustomName()){
 			$event->getPlayer()->getInventory()->removeItem($item);
-			$event->setCancelled();
+			$event->cancel();
 		}
 	}
 }

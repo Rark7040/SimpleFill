@@ -5,11 +5,12 @@ declare(strict_types = 1);
 namespace rark\simple_fill\utils;
 
 use pocketmine\{
-	Player,
 	block\Block,
-	level\Level,
-	math\Vector3
+	math\Vector3,
+    Server
 };
+use pocketmine\player\Player;
+use pocketmine\block\tile\Tile;
 use rark\simple_fill\{
 	Main,
 	form\WarningForm
@@ -54,7 +55,7 @@ final class Fill{
 				return self::ERROR_EXEPTION_BROKEN_DATA;
 			break;
 
-			case $player->isOP():
+			case Server::getInstance()->isOp($player->getName()):
 				return self::ERROR_HAS_NOT_PERMISSION;
 			break;
 
@@ -64,10 +65,6 @@ final class Fill{
 
 			case $this->data[$name]['pos2'] instanceof Vector3:
 				return self::ERROR_POS2_NOT_FOUND;
-			break;
-
-			case $player->isValid():
-				return self::ERROR_LEVEL_CLOSED;
 			break;
 
 			default:
@@ -103,7 +100,7 @@ final class Fill{
 	}
 
 	public function getLevelData(Player $player, &$blocks, &$tiles):void{
-		$level = $player->getLevel();
+		$level = $player->getPosition()->getWorld();
 		$pos1 = $this->data[$player->getName()]['pos1'];
 		$pos2 = $this->data[$player->getName()]['pos2'];
 		$pos1_clone = clone $pos1;
@@ -115,24 +112,23 @@ final class Fill{
 		for($x = $pos2->x - $pos1->x; $x >= 0; --$x){
 			for($y = $pos2->y - $pos1->y; $y >= 0; --$y){
 				for($z = $pos2->z - $pos1->z; $z >= 0; --$z){
+					$v = $pos1->add($x, $y, $z);
 					$blocks[] = $level->getBlock($pos1->add($x, $y, $z));
+					$tile = $level->getTile($v);
+
+					if($tile === null) continue;
+					$tiles[] = $tile;
 				}
 			}
 		}
 		$blocks[] = $pos1_clone;
 		$blocks[] = $pos2_clone;
-
-		foreach($level->getTiles() as $tile){
-			if(in_region($tile, $pos1, $pos2)){
-				$tiles[] = $tile;
-				unset($tile);
-			}
-		}
 	}
 
 	public function setBlocks(Player $player, array $positions, array $tiles, Block $block):void{
-		$level = $player->getLevel();
-
+		$level = $player->getPosition()->getWorld();
+		/** @var Tile $tile */
+		foreach($tiles as $tile) $tile->close();
 		foreach($positions as $pos){
 			$level->setBlock($pos, $block);
 		}

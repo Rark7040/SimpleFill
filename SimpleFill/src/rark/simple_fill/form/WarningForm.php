@@ -5,18 +5,18 @@ declare(strict_types = 1);
 namespace rark\simple_fill\form;
 
 use pocketmine\form\Form;
-use pocketmine\Player;
 use pocketmine\block\Block;
-use pocketmine\level\Position;
+use pocketmine\player\Player;
 use rark\simple_fill\Main;
+use pocketmine\block\tile\Tile;
 
 
 final class WarningForm implements Form{
-	/** @var pocketmine\block\Block[] */
+	/** @var Block[] */
 	private array $blocks;
-	/** @var pocketmine\tile\Tile[] */
+	/** @var Tile[] */
 	private $tiles;
-	/** @var pocketmine\block\Block */
+	/** @var Block */
 	private $block;
 
 	public function __construct(array $blocks, array $tiles, Block $block){
