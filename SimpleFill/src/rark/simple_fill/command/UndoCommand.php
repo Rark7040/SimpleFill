@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace rark\simple_fill\command;
 
-use pocketmine\command\{PluginCommand, CommandSender};
+use pocketmine\command\{Command, PluginCommand, CommandSender};
 use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\Server;
@@ -12,10 +12,10 @@ use rark\simple_fill\Main;
 use function rark\simple_fill\utils\sound;
 
 
-final class UndoCommand extends PluginCommand{
+final class UndoCommand extends Command{
 
-	public function __construct(PluginBase $plugin){
-		parent::__construct('sfundo', $plugin, $plugin);
+	public function __construct(){
+		parent::__construct('sfundo');
 		$this->setAliases(['su']);
 		$this->setDescription(Main::HEADER.'操作を取り消す');
 	}

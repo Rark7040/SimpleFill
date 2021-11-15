@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace rark\simple_fill\command;
 
 use pocketmine\plugin\Plugin;
-use pocketmine\command\{CommandSender, PluginCommand};
+use pocketmine\command\{Command, CommandSender, PluginCommand};
 use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\Server;
@@ -13,10 +13,10 @@ use rark\simple_fill\Main;
 use function rark\simple_fill\utils\sound;
 
 
-final class FillCommand extends PluginCommand{
+final class FillCommand extends Command{
 
-	public function __construct(PluginBase $plugin){
-		parent::__construct('simplefill', $plugin, $plugin);
+	public function __construct(){
+		parent::__construct('simplefill');
 		$this->setAliases(['sf']);
 		$this->setDescription(Main::HEADER.'Fillモードを切り替えるアイテムを付与');
 		$this->setUsage('simplefill ?<on|off>');
