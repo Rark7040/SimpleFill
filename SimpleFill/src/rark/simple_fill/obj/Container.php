@@ -49,7 +49,7 @@ class Container{
 		return $this->pointer;
 	}
 
-	public function fill(int $id, int $meta):bool{
+	public function fill(int $id, int $meta, World $world):bool{
 		/** @var BlockFactory $factory */
 		$factory = BlockFactory::getInstance();
 
@@ -57,7 +57,9 @@ class Container{
 			$block = $factory->get($id, $meta);
 			
 			foreach($this->foreach() as $v){
-				$this->blocks[serialize($v)] = $block;
+				$b = clone $block;
+				$b->position($world, (int) $v->x, (int) $v->y, (int) $v->z);
+				$this->blocks[serialize($v)] = $b;
 			}
 			return true;
 
@@ -98,5 +100,11 @@ class Container{
 	/** @return Block[] */
 	public function getBlocks():array{
 		return $this->blocks;
+	}
+
+	public function place():void{
+		foreach($this->getBlocks() as $block){
+			$block->getPosition()->getWorld()->setBlock($block->getPosition(), $block);
+		}
 	}
 }
