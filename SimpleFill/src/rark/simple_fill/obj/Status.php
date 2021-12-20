@@ -31,12 +31,12 @@ abstract class Status{
 		self::$player_status[$player->getName()] |= $flag;
 	}
 
-	public static function clear(Player $player, ?int $flag = null):void{
-		if($flag === null){
-			unset(self::$player_status[$player->getName()]);
-			self::$player_status = array_filter(self::$player_status);
-			return;
-		}
+	public static function clearAll(Player $player):void{
+		unset(self::$player_status[$player->getName()]);
+		self::$player_status = array_filter(self::$player_status);
+	}
+
+	public static function clear(Player $player, int $flag):void{
 		if(!isset(self::$player_status[$player->getName()])) self::prepare($player);
 		self::$player_status[$player->getName()] &= ~$flag;
 	}

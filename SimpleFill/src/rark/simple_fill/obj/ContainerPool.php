@@ -9,15 +9,24 @@ abstract class ContainerPool{
 	final private function __construct(){/** NOOP */}
 	/** @var PreContainer[] */
 	protected static array $pre_containers = [];
-	/** @var Container[] */
-	protected static array $containers = [];
 
 	public static function prepare(Player $player):void{
-		self::$containers[$player->getName()] = new PreContainer;
+		self::$pre_containers[$player->getName()] = new PreContainer;
 	}
 
 	public static function getPreContainer(Player $player):?PreContainer{
 		return self::hasPreContainer($player)? self::$pre_containers[$player->getName()]: null;
+	}
+
+	public static function getPreContainerNonNull(Player $player):PreContainer{
+		if(!self::hasPreContainer($player)) self::prepare($player);
+		return self::$pre_containers[$player->getName()];
+	}
+
+	public static function clearContainer(Player $player):void{
+		if(!self::hasPreContainer($player)) return;
+		unset(self::$pre_containers[$player->getName()]);
+		self::$pre_containers = array_filter(self::$pre_containers);
 	}
 
 	public static function hasPreContainer(Player $player):bool{

@@ -3,12 +3,16 @@ declare(strict_types = 1);
 
 namespace rark\simple_fill\item;
 
+use pocketmine\block\Block;
 use pocketmine\item\Armor;
+use pocketmine\item\enchantment\EnchantmentInstance;
+use pocketmine\item\enchantment\VanillaEnchantments;
 use pocketmine\item\Item;
 use pocketmine\item\VanillaItems;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
-use rark\simple_fill\obj\Status;
+use rark\simple_fill\obj\ContainerPool;
+use rark\simple_fill\obj\FillStatusWrapper;
 
 class SwitchMode extends SFTool{
 	const BASE_NAME = 'Switch Mode'.TextFormat::RESET;
@@ -22,12 +26,14 @@ class SwitchMode extends SFTool{
 		self::$on = VanillaItems::DIAMOND_CHESTPLATE();
 		self::$off = VanillaItems::IRON_CHESTPLATE();
 		self::$on->setCustomName(self::ON_NAME);
+		self::$on->addEnchantment(new EnchantmentInstance(VanillaEnchantments::PROTECTION(), 1));
 		self::$off->setCustomName(self::OFF_NAME);
+		self::$off->addEnchantment(new EnchantmentInstance(VanillaEnchantments::PROTECTION(), 1));
 		self::setTag();
 	}
 
 	public static function get(Player $player):Item{
-		return clone (Status::is($player, Status::FILL)? self::$on: self::$off);
+		return clone (FillStatusWrapper::isFillMode($player)? self::$on: self::$off);
 	}
 
 	public static function getExtendedTag():string{
@@ -42,7 +48,7 @@ class SwitchMode extends SFTool{
 		yield self::$off;
 	}
 
-	public static function use(Player $player, Item $item):void{
+	public static function use(Player $player, Item $item, ?Block $block):void{
 		if(!self::equals($item)) return;
 		$custom_name = $item->getCustomName();
 
@@ -52,10 +58,12 @@ class SwitchMode extends SFTool{
 	}
 
 	protected static function onReceiveOn(Player $player):void{
-		Status::set($player, Status::FILL);
+		FillStatusWrapper::setFillMode($player);
+		ContainerPool::prepare($player);
 	}
 
 	protected static function onReceiveOff(Player $player):void{
-		Status::clear($player, Status::FILL);
+		FillStatusWrapper::offFillMode($player);
+		ContainerPool::clearContainer($player);
 	}
 }
