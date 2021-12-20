@@ -49,6 +49,15 @@ class Container{
 		return $this->pointer;
 	}
 
+	public function setBlock(Block $block):void{
+		$this->blocks[serialize($this->pointer)] = $block;
+	}
+
+	public function unsetBlock():void{
+		unset($this->blocks[serialize($this->pointer)]);
+		$this->blocks = array_filter($this->blocks);
+	}
+
 	public function fill(int $id, int $meta, World $world):bool{
 		/** @var BlockFactory $factory */
 		$factory = BlockFactory::getInstance();
