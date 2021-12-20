@@ -16,7 +16,9 @@ abstract class SFTool{
 	abstract public static function getExtendedTag():string;
 	/** @return \Generator<Item> */
 	abstract protected static function getItems():\Generator;
-	abstract public static function use(Player $player, Item $item, ?Block $block):void;
+	abstract public static function useOnBlock(Player $player, Item $item, Block $block):void;
+	abstract public static function use(Player $player, Item $item):void;
+
 
 	protected static function setTag():void{
 		$nbt = new CompoundTag;

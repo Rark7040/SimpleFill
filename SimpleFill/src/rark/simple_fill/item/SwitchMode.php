@@ -48,7 +48,15 @@ class SwitchMode extends SFTool{
 		yield self::$off;
 	}
 
-	public static function use(Player $player, Item $item, ?Block $block):void{
+	public static function use(Player $player, Item $item):void{
+		self::onUse($player, $item);
+	}
+
+	public static function useOnBlock(Player $player, Item $item, Block $block):void{
+		self::onUse($player, $item);
+	}
+
+	protected static function onUse(Player $player, Item $item):void{
 		if(!self::equals($item)) return;
 		$custom_name = $item->getCustomName();
 

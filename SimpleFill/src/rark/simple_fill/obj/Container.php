@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace rark\simple_fill\obj;
 
 use pocketmine\block\Block;
-use pocketmine\block\BlockFactory;
 use pocketmine\math\Vector3;
 use pocketmine\world\World;
 use rark\simple_fill\utils\VectorUtils;
@@ -58,13 +57,8 @@ class Container{
 		$this->blocks = array_filter($this->blocks);
 	}
 
-	public function fill(int $id, int $meta, World $world):bool{
-		/** @var BlockFactory $factory */
-		$factory = BlockFactory::getInstance();
-
+	public function fill(Block $block, World $world):bool{
 		try{
-			$block = $factory->get($id, $meta);
-			
 			foreach($this->foreach() as $v){
 				$b = clone $block;
 				$b->position($world, (int) $v->x, (int) $v->y, (int) $v->z);
