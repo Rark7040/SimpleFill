@@ -1,10 +1,11 @@
 name : SimpleFill
 version : 2.1.4
 api : 4.0.0
-
-main : rark\simple_fill\Main
-author : Rark
-
+main : rark\simple_fill\Loader
+author : RarkHopper
+permissions:
+  simple_fill.command.op:
+    description: "except for operator, can't use command"
 #<UpDdate Log>
 #
 #[1.0.0]
