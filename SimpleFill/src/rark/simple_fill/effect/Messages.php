@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace rark\simple_fill\txt;
+namespace rark\simple_fill\effect;
 
 use pocketmine\network\mcpe\protocol\TextPacket;
 use pocketmine\player\Player;

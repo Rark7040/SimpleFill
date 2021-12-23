@@ -107,7 +107,7 @@ class Container{
 		return $this->blocks;
 	}
 
-	public function place(?Player $player):void{
+	public function place(?Player $player = null):void{
 		RunningTasks::run($this, $player);
 	}
 

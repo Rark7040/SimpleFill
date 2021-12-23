@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace rark\simple_fill\task;
 
 use pocketmine\player\Player;
-use pocketmine\world\World;
 use rark\simple_fill\Loader;
 use rark\simple_fill\obj\Container;
 
