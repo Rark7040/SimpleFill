@@ -10,6 +10,7 @@ use pocketmine\network\mcpe\protocol\types\LevelSoundEvent;
 use pocketmine\player\Player;
 use pocketmine\scheduler\Task;
 use rark\simple_fill\obj\Container;
+use rark\simple_fill\obj\Logger;
 
 class BlockPlaceTask extends Task{
 	const PLACE_AMOUNT = 30;
@@ -27,7 +28,8 @@ class BlockPlaceTask extends Task{
 		if($key === null or !isset($this->blocks[$key])) return;
 		$backup = clone $container;
 		$backup->loadBlocks($this->blocks[$key]->getPosition()->getWorld());
-		$this->backup =$backup;
+		$this->backup = $backup;
+		Logger::push($player, $backup);
 	}
 
 	public function onRun():void{

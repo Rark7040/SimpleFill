@@ -9,7 +9,6 @@ use pocketmine\scheduler\ClosureTask;
 use rark\simple_fill\Loader;
 use rark\simple_fill\obj\ContainerPool;
 use rark\simple_fill\obj\FillStatusWrapper;
-use rark\simple_fill\obj\Logger;
 
 class BlockPlaceHandler implements BaseHandler{
 	public static function getTarget():string{
@@ -39,10 +38,6 @@ class BlockPlaceHandler implements BaseHandler{
 					if($container === null){
 						return;
 					}
-					$blocks = clone $container;
-					$blocks->loadBlocks($player->getPosition()->getWorld());
-					Logger::push($player, $blocks);
-
 					$container->fill($block, $player->getPosition()->getWorld());
 					$container->place($player);
 				}
