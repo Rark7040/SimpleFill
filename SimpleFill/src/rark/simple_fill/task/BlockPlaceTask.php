@@ -5,7 +5,6 @@ namespace rark\simple_fill\task;
 
 use pocketmine\block\Block;
 use pocketmine\network\mcpe\convert\RuntimeBlockMapping;
-use pocketmine\network\mcpe\NetworkSession;
 use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
 use pocketmine\network\mcpe\protocol\types\LevelSoundEvent;
 use pocketmine\player\Player;
@@ -47,11 +46,10 @@ class BlockPlaceTask extends Task{
 			$session = $this->player->getNetWorkSession();
 
 		}catch(\Exception){
-			$session = null;
+			return;
 		}
 
-		if($block === null or $session === null) return;
-		/** @var NetWorkSession $session */
+		if($block === null) return;
 		$session->sendDataPacket(
 			LevelSoundEventPacket::nonActorSound(
 				LevelSoundEvent::PLACE,
