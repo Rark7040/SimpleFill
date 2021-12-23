@@ -8,6 +8,7 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\scheduler\TaskScheduler;
 use rark\simple_fill\handler\EventListener;
 use rark\simple_fill\libs\cortexpe\commando\PacketHooker;
+use rark\simple_fill\task\RunningTasks;
 
 class Loader extends PluginBase{
 	protected static TaskScheduler $task_scheduler;
@@ -16,6 +17,10 @@ class Loader extends PluginBase{
 		if(!PacketHooker::isRegistered()) PacketHooker::register($this);
 		self::$task_scheduler = $this->getScheduler();
 		$this->getServer()->getPluginManager()->registerEvents(new EventListener, $this);
+	}
+
+	protected function onDisable():void{
+		RunningTasks::allStop();//todo rollback
 	}
 
 	public static function getTaskScheduler():TaskScheduler{

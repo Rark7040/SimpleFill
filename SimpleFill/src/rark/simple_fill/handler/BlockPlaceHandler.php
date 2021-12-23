@@ -44,7 +44,7 @@ class BlockPlaceHandler implements BaseHandler{
 					Logger::push($player, $blocks);
 
 					$container->fill($block, $player->getPosition()->getWorld());
-					$container->place();
+					$container->place($player);
 				}
 			),
 			1

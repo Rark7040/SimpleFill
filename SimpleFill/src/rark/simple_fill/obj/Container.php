@@ -5,7 +5,9 @@ namespace rark\simple_fill\obj;
 
 use pocketmine\block\Block;
 use pocketmine\math\Vector3;
+use pocketmine\player\Player;
 use pocketmine\world\World;
+use rark\simple_fill\task\RunningTasks;
 use rark\simple_fill\utils\VectorUtils;
 
 class Container{
@@ -105,9 +107,14 @@ class Container{
 		return $this->blocks;
 	}
 
-	public function place():void{
-		foreach($this->getBlocks() as $block){
-			$block->getPosition()->getWorld()->setBlock($block->getPosition(), $block);
+	public function place(?Player $player):void{
+		RunningTasks::run($this, $player);
+	}
+
+	public function forcePlace():void{
+		foreach($this->blocks as $block){
+			$pos = $block->getPosition();
+			$pos->getWorld()->setBlock($pos->asVector3(), $block);
 		}
 	}
 }
