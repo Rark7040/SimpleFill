@@ -46,6 +46,7 @@ class BlockPlaceTask extends Task{
 			$session = $this->player->getNetWorkSession();
 
 		}catch(\Exception){
+			$this->player = null;
 			return;
 		}
 
