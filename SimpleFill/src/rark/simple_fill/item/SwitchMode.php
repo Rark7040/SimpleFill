@@ -68,13 +68,13 @@ class SwitchMode extends SFTool{
 		$player->getInventory()->getItemInHand(self::get($player));
 	}
 
-	protected static function onReceiveOn(Player $player):void{
+	public static function onReceiveOn(Player $player):void{
 		FillStatusWrapper::setFillMode($player);
 		ContainerPool::prepare($player);
 		Messages::sendMessage($player, Messages::TURN_ON);
 	}
 
-	protected static function onReceiveOff(Player $player):void{
+	public static function onReceiveOff(Player $player):void{
 		FillStatusWrapper::offFillMode($player);
 		ContainerPool::clearContainer($player);
 		Messages::sendMessage($player, Messages::TURN_OFF);

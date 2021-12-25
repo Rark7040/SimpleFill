@@ -57,11 +57,13 @@ abstract class Logger{
 	}
 
 	public static function undo(Player $player, int $len):void{
-		Messages::sendMessage($player, Messages::getUndoMessage($len));
+		$count = 0;
 
 		foreach(self::getLog($player, $len) as $container){
 			$container->place();
+			++$count;
 		}
+		Messages::sendMessage($player, Messages::getUndoMessage($count));
 	} 
 
 }

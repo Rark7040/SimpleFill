@@ -7,7 +7,10 @@ use rark\simple_fill\libs\cortexpe\commando\BaseCommand;
 use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
+use pocketmine\Server;
 use rark\simple_fill\effect\Messages;
+use rark\simple_fill\item\AirFill;
+use rark\simple_fill\item\SwitchMode;
 use rark\simple_fill\libs\cortexpe\commando\args\BooleanArgument;
 
 class SimpleFillCommand extends BaseCommand{
@@ -33,10 +36,15 @@ class SimpleFillCommand extends BaseCommand{
 
 	public function onRun(CommandSender $sender, string $command, array $args):void{
 		if(!$sender instanceof Player){
-			
 			$sender->sendMessage(Messages::PLZ_EXEC_IN_GAME);
 			return;
 		}
-
+		if(!Server::getInstance()->isOp($sender->getName())) return;
+		if(isset($args[self::ARG_MODE])){
+			(bool) $args[self::ARG_MODE]? SwitchMode::onReceiveOn($sender): SwitchMode::onReceiveOff($sender);
+			return;
+		}
+		$sender->getInventory()->addItem(SwitchMode::get($sender), AirFill::get());
+		Messages::sendMessage($sender, Messages::ADDED_ITEMS);
 	}
 }

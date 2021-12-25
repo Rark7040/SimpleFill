@@ -16,12 +16,13 @@ abstract class Messages{
 	const TURN_OFF = TextFormat::RED.'Fill Modeを無効化しました。';
 	const ADDED_ITEMS = TextFormat::YELLOW.'アイテムを付与しました';
 	const START_FILL = TextFormat::GREEN.'fillを開始します。';
-	const UNDO = '回分の操作を取り消します。';
+	const UNDO = '回分の操作を取り消しました。';
 	const PLZ_EXEC_IN_GAME = TextFormat::RED.'ゲーム内で実行してください';
-	const ERR_CONTAINER_IS_NULL = TextFormat::RED.'Containerを取得できませんでした';
+	const ERR_CONTAINER = TextFormat::RED.'Containerを取得できませんでした';
+	const ERR_COUNT = TextFormat::RED.'Undoのカウントは1以上である必要があります';
 
 	public static function getUndoMessage(int $count):string{
-		return TextFormat::GREEN.$count.self::UNDO;
+		return TextFormat::GREEN.number_format($count).self::UNDO;
 	}
 
 	public static function sendMessage(Player $player, string $txt):bool{

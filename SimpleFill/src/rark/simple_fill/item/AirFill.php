@@ -67,7 +67,7 @@ class AirFill extends SFTool{
 		$container = $pre_container->parse();
 
 		if($container === null){
-			Messages::sendMessage($player, Messages::ERR_CONTAINER_IS_NULL);
+			Messages::sendMessage($player, Messages::ERR_CONTAINER);
 			return;
 		}
 		self::saveLog($player, clone $container);

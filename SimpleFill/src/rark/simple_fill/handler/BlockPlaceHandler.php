@@ -39,7 +39,7 @@ class BlockPlaceHandler implements BaseHandler{
 					$container = $pre_container->parse();
 
 					if($container === null){
-						Messages::sendMessage($player, Messages::ERR_CONTAINER_IS_NULL);
+						Messages::sendMessage($player, Messages::ERR_CONTAINER);
 						return;
 					}
 					$container->fill($block, $player->getPosition()->getWorld());
