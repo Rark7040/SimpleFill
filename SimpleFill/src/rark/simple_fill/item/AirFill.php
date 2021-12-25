@@ -11,6 +11,7 @@ use pocketmine\item\Item;
 use pocketmine\item\VanillaItems;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
+use rark\simple_fill\effect\Messages;
 use rark\simple_fill\obj\Container;
 use rark\simple_fill\obj\ContainerPool;
 use rark\simple_fill\obj\FillStatusWrapper;
@@ -59,11 +60,14 @@ class AirFill extends SFTool{
 		$pre_container->push($block->getPosition()->asVector3());
 
 		if(!$pre_container->isComplete()){
+			Messages::sendMessage($player, Messages::SET_POS1);
 			return;
 		}
+		Messages::sendMessage($player, Messages::SET_POS2);
 		$container = $pre_container->parse();
 
 		if($container === null){
+			Messages::sendMessage($player, Messages::ERR_CONTAINER_IS_NULL);
 			return;
 		}
 		self::saveLog($player, clone $container);

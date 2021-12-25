@@ -11,6 +11,8 @@ use pocketmine\item\Item;
 use pocketmine\item\VanillaItems;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
+use rark\simple_fill\effect\Messages;
+use rark\simple_fill\effect\Sounds;
 use rark\simple_fill\obj\ContainerPool;
 use rark\simple_fill\obj\FillStatusWrapper;
 
@@ -62,16 +64,19 @@ class SwitchMode extends SFTool{
 
 		if($custom_name === self::ON_NAME) self::onReceiveOn($player);
 		elseif($custom_name === self::OFF_NAME) self::onReceiveOff($player);
+		Sounds::noteSound($player);
 		$player->getInventory()->getItemInHand(self::get($player));
 	}
 
 	protected static function onReceiveOn(Player $player):void{
 		FillStatusWrapper::setFillMode($player);
 		ContainerPool::prepare($player);
+		Messages::sendMessage($player, Messages::TURN_ON);
 	}
 
 	protected static function onReceiveOff(Player $player):void{
 		FillStatusWrapper::offFillMode($player);
 		ContainerPool::clearContainer($player);
+		Messages::sendMessage($player, Messages::TURN_OFF);
 	}
 }

@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace rark\simple_fill\obj;
 
 use pocketmine\player\Player;
+use rark\simple_fill\effect\Messages;
 
 abstract class Logger{
 	final private function __construct(){/** NOOP */}
@@ -56,6 +57,8 @@ abstract class Logger{
 	}
 
 	public static function undo(Player $player, int $len):void{
+		Messages::sendMessage($player, Messages::getUndoMessage($len));
+
 		foreach(self::getLog($player, $len) as $container){
 			$container->place();
 		}

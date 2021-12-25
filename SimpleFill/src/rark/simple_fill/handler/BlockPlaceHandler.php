@@ -6,6 +6,7 @@ namespace rark\simple_fill\handler;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\Event;
 use pocketmine\scheduler\ClosureTask;
+use rark\simple_fill\effect\Messages;
 use rark\simple_fill\Loader;
 use rark\simple_fill\obj\ContainerPool;
 use rark\simple_fill\obj\FillStatusWrapper;
@@ -27,8 +28,10 @@ class BlockPlaceHandler implements BaseHandler{
 		$pre_container->push($v);
 
 		if(!$pre_container->isComplete()){
+			Messages::sendMessage($player, Messages::SET_POS1);
 			return;
 		}
+		Messages::sendMessage($player, Messages::SET_POS2);
 		Loader::getTaskScheduler()->scheduleDelayedTask(
 			new ClosureTask(
 				function() use($player, $pre_container, $v, $world):void{
@@ -36,6 +39,7 @@ class BlockPlaceHandler implements BaseHandler{
 					$container = $pre_container->parse();
 
 					if($container === null){
+						Messages::sendMessage($player, Messages::ERR_CONTAINER_IS_NULL);
 						return;
 					}
 					$container->fill($block, $player->getPosition()->getWorld());

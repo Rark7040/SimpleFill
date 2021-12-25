@@ -7,6 +7,7 @@ use pocketmine\block\Air;
 use pocketmine\block\Block;
 use pocketmine\player\Player;
 use pocketmine\scheduler\Task;
+use rark\simple_fill\effect\Messages;
 use rark\simple_fill\effect\Sounds;
 use rark\simple_fill\obj\Container;
 use rark\simple_fill\obj\Logger;
@@ -29,6 +30,9 @@ class BlockPlaceTask extends Task{
 		$backup->loadBlocks($this->blocks[$key]->getPosition()->getWorld());
 		$this->backup = $backup;
 		Logger::push($player, $backup);
+
+		if($this->player === null) return;
+		Messages::sendMessage($player, Messages::START_FILL);
 	}
 
 	public function onRun():void{
