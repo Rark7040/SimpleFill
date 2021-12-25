@@ -23,7 +23,7 @@ class SimpleFillCommand extends BaseCommand{
 		parent::__construct(
 			$owner,
 			self::COMMAND_NAME,
-			self::DESCRIPTION
+			self::DESCRIPTION,
 			[self::ALIAS]
 		);
 	}
