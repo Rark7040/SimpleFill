@@ -6,6 +6,7 @@ author : RarkHopper
 permissions:
   simple_fill.command.op:
     description: "except for operator, can't use command"
+    default: op # can also be false, or op
 #<UpDdate Log>
 #
 #[1.0.0]

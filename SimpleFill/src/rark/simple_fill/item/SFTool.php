@@ -19,18 +19,19 @@ abstract class SFTool{
 	abstract public static function useOnBlock(Player $player, Item $item, Block $block):void;
 	abstract public static function use(Player $player, Item $item):void;
 
-
-	protected static function setTag():void{
+	/** @return Item[] */
+	protected static function setTag():array{
+		/** @var Item[] */
+		$items = [];
 		$nbt = new CompoundTag;
-		$nbt->setInt(self::getExtendedTag(), 1);
+		$nbt->setInt(static::getExtendedTag(), 1);
 		
-		foreach(self::getItems() as $item){
-			$item->setNamedTag($nbt);
-		}
+		foreach(static::getItems() as $item) $items[] = $item->setNamedTag($nbt);
+		return $items;
 	}
 
 	public static function equals(Item $item):bool{
-		foreach(self::getItems() as $self){ //...
+		foreach(static::getItems() as $self){ //...
 			return $item->getNamedTag()->equals($self->getNamedTag());
 		}
 	}

@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace rark\simple_fill\item;
 
 use pocketmine\block\Block;
-use pocketmine\item\Armor;
+use pocketmine\item\Bow;
 use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\enchantment\VanillaEnchantments;
 use pocketmine\item\Item;
@@ -21,21 +21,21 @@ class SwitchMode extends SFTool{
 	const ON_NAME = TextFormat::GREEN.self::BASE_NAME;
 	const OFF_NAME = TextFormat::GRAY.self::BASE_NAME;
 	const EXTENDED_TAG = self::PARENT_TAG.'switch_mode';
-	protected static Armor $on;
-	protected static Armor $off;
+	protected static Bow $on;
+	protected static Bow $off;
 
 	public static function init():void{
-		self::$on = VanillaItems::DIAMOND_CHESTPLATE();
-		self::$off = VanillaItems::IRON_CHESTPLATE();
-		self::$on->setCustomName(self::ON_NAME);
-		self::$on->addEnchantment(new EnchantmentInstance(VanillaEnchantments::PROTECTION(), 1));
-		self::$off->setCustomName(self::OFF_NAME);
-		self::$off->addEnchantment(new EnchantmentInstance(VanillaEnchantments::PROTECTION(), 1));
-		self::setTag();
+		self::$on = VanillaItems::BOW();
+		self::$off = VanillaItems::BOW();
+		$items = self::setTag();
+		self::$on = $items[0];
+		self::$off = $items[1];
+		self::$on->setCustomName(self::ON_NAME)->addEnchantment(new EnchantmentInstance(VanillaEnchantments::PROTECTION(), 1));
+		self::$off = VanillaItems::BOW()->setCustomName(self::OFF_NAME)->addEnchantment(new EnchantmentInstance(VanillaEnchantments::PROTECTION(), 1));
 	}
 
 	public static function get(Player $player):Item{
-		return clone (FillStatusWrapper::isFillMode($player)? self::$on: self::$off);
+		return FillStatusWrapper::isFillMode($player)? self::$on: self::$off;
 	}
 
 	public static function getExtendedTag():string{
