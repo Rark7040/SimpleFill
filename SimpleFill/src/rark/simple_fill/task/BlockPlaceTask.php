@@ -3,12 +3,11 @@ declare(strict_types = 1);
 
 namespace rark\simple_fill\task;
 
+use pocketmine\block\Air;
 use pocketmine\block\Block;
-use pocketmine\network\mcpe\convert\RuntimeBlockMapping;
-use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
-use pocketmine\network\mcpe\protocol\types\LevelSoundEvent;
 use pocketmine\player\Player;
 use pocketmine\scheduler\Task;
+use rark\simple_fill\effect\Sounds;
 use rark\simple_fill\obj\Container;
 use rark\simple_fill\obj\Logger;
 
@@ -44,23 +43,11 @@ class BlockPlaceTask extends Task{
 		}
 
 		if($this->player === null) return;
-		try{
-			$session = $this->player->getNetWorkSession();
-
-		}catch(\Exception){
-			$this->player = null;
-			return;
-		}
-
 		if($block === null) return;
-		$session->sendDataPacket(
-			LevelSoundEventPacket::nonActorSound(
-				LevelSoundEvent::PLACE,
-				$this->player->getPosition(),
-				false,
-				RuntimeBlockMapping::getInstance()->toRuntimeId($block->getFullId())
-			)
-		);
+		$block instanceof Air?
+			Sounds::blockBreakSound($this->player):
+			Sounds::blockPlaceSound($this->player, $block);
+		
 	}
 
 	public function stop():void{
