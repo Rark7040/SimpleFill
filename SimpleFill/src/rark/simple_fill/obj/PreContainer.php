@@ -10,8 +10,12 @@ class PreContainer{
 	protected ?Vector3 $v2 = null;
 
 	public function push(Vector3 $v):void{
-		if(!$this->isSetV1()) $this->pushV1($v);
-		elseif(!$this->isSetV2()) $this->pushV2($v);
+		if(!$this->isSetV1()){
+			$this->pushV1($v);
+
+		}elseif(!$this->isSetV2()){
+			$this->pushV2($v);
+		}
 	}
 
 	protected function pushV1(Vector3 $v1):void{
@@ -31,11 +35,11 @@ class PreContainer{
 	}
 
 	protected function isSetV2():bool{
-		return $this->v !== null;
+		return $this->v2 !== null;
 	}
 
 	public function parse():?Container{
-		if($this->isComplete()) return null;
+		if(!$this->isComplete()) return null;
 		return new Container($this->v1, $this->v2);
 	}
 }

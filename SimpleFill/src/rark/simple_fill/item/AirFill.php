@@ -18,24 +18,22 @@ use rark\simple_fill\obj\FillStatusWrapper;
 use rark\simple_fill\obj\Logger;
 use rark\simple_fill\obj\PreContainer;
 
-class AirFill extends SFTool{
+class AirFill implements SFTool{
 	const BASE_NAME = TextFormat::AQUA.'Air Fill'.TextFormat::RESET;
-	const EXTENDED_TAG = self::PARENT_TAG.'air_fill';
 	protected static Item $item;
 
 	public static function init():void{
 		self::$item = VanillaItems::IRON_PICKAXE();
 		self::$item->setCustomName(self::BASE_NAME);
 		self::$item->addEnchantment(new EnchantmentInstance(VanillaEnchantments::PROTECTION(), 1));
-		self::setTag();
 	}
 
 	public static function get():Item{
 		return clone self::$item;
 	}
 
-	public static function getExtendedTag():string{
-		return self::EXTENDED_TAG;
+	public static function equals(Item $item):bool{
+		return $item->getCustomName() === self::BASE_NAME;
 	}
 
 	/**
@@ -73,6 +71,7 @@ class AirFill extends SFTool{
 		self::saveLog($player, clone $container);
 		$container->fill(VanillaBlocks::AIR(), $player->getPosition()->getWorld());
 		$container->place();
+		ContainerPool::clearContainer($player);
 	}
 
 	protected static function saveLog(Player $player, Container $container):void{

@@ -48,5 +48,6 @@ class BlockPlaceHandler implements BaseHandler{
 			),
 			1
 		);
+		ContainerPool::clearContainer($player);
 	}
 }

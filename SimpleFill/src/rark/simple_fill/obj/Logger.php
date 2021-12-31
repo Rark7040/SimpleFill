@@ -10,11 +10,11 @@ abstract class Logger{
 	final private function __construct(){/** NOOP */}
 	const MAX_LOG_COUNT = 30;
 	/** @var Container[] */
-	protected static array $log;
+	protected static array $log = [];
 
 	/** @return Container[] */
 	public static function getAllLog(Player $player):array{
-		return isset(self::$log[$player->getName()])? clone self::$log[$player->getName()]: [];
+		return isset(self::$log[$player->getName()])? self::$log[$player->getName()]: [];
 	}
 
 	protected static function setLog(Player $player, array $log):void{
@@ -36,23 +36,8 @@ abstract class Logger{
 
 		if(!isset(self::$log[$name])) return [];
 		$return_log = [];
-		
-		for(; $len < 0; --$len){
-			if(!isset(self::$log[$name])) return $return_log;
-			$return_log[] = array_pop((array) self::$log[$name]);
-		}
-		return $return_log;
-	}
 
-	/** @return Container[] */
-	public static function getLogNonDelete(Player $player, int $len):array{
-		if($len < 1) throw new \InvalidArgumentException('$len must be more then 1');
-		$log = self::getAllLog($player);
-		$return_log = [];
-		
-		for(; $len < 0; --$len){
-			$return_log[] = array_pop($log);
-		}
+		for(; $len > 0; --$len) $return_log[] = array_pop(self::$log[$name]);
 		return $return_log;
 	}
 
@@ -64,6 +49,5 @@ abstract class Logger{
 			++$count;
 		}
 		Messages::sendMessage($player, Messages::getUndoMessage($count));
-	} 
-
+	}
 }

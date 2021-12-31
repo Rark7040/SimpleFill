@@ -13,7 +13,7 @@ use rark\simple_fill\obj\Container;
 use rark\simple_fill\obj\Logger;
 
 class BlockPlaceTask extends Task{
-	const PLACE_AMOUNT = 30;
+	const PLACE_AMOUNT = 100;
 	const PLACE_SPEED = 4;
 	protected ?Player $player;
 	/** @var Block[] */
@@ -23,15 +23,15 @@ class BlockPlaceTask extends Task{
 	public function __construct(Container $container, ?Player $player){
 		$this->blocks = $container->getBlocks();
 		$this->player = $player;
-		$key = array_key_first($this->block);
+		$key = array_key_first($this->blocks);
 
 		if($key === null or !isset($this->blocks[$key])) return;
 		$backup = clone $container;
 		$backup->loadBlocks($this->blocks[$key]->getPosition()->getWorld());
 		$this->backup = $backup;
-		Logger::push($player, $backup);
 
 		if($this->player === null) return;
+		Logger::push($player, $backup);
 		Messages::sendMessage($player, Messages::START_FILL);
 	}
 
@@ -51,7 +51,6 @@ class BlockPlaceTask extends Task{
 		$block instanceof Air?
 			Sounds::blockBreakSound($this->player):
 			Sounds::blockPlaceSound($this->player, $block);
-		
 	}
 
 	public function stop():void{
