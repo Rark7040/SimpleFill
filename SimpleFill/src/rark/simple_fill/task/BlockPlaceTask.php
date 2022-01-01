@@ -20,10 +20,12 @@ class BlockPlaceTask extends Task{
 	protected ?array $blocks = [];
 	protected ?Container $backup = null;
 	protected bool $is_killed = false;
+	protected int $id;
 
-	public function __construct(Container $container, ?Player $player){
+	public function __construct(Container $container, ?Player $player, int $id){
 		$this->blocks = $container->getBlocks();
 		$this->player = $player;
+		$this->id = $id;
 		$key = array_key_first($this->blocks);
 
 		if($key === null or !isset($this->blocks[$key])) return;
@@ -51,6 +53,10 @@ class BlockPlaceTask extends Task{
 		self::$fill_size = $fill_size;
 	}
 
+	public function getId():int{
+		return $this->id;
+	}
+
 	public function onRun():void{
 		if($this->is_killed){
 			$this->stop();
@@ -75,7 +81,7 @@ class BlockPlaceTask extends Task{
 		$this->is_killed = true;
 		$this->player = null;
 		$this->blocks = null;
-		$this->getHandler()?->cancel();
+		RunningTasks::stop($this->getId());
 	}
 
 	public function rollback():void{
