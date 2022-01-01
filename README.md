@@ -1,5 +1,4 @@
 # SimpleFill  
-# NOT WORKING
 建築に特化したFillプラグインです。<br>
 特定アイテムを使用して、Fillモードを切り替え、<br>
 ブロックを二か所に置くだけでFillができます。<br>
@@ -16,7 +15,7 @@
 | コマンド | エイリアス | 説明 |
 |---|---|---|
 | /simplefill | /sf | Fillモードを切り替えるアイテムをプレイヤーに付与します |
-| /sfundo <number> | /su < number> | <number>に書かれた数だけ操作を取り消します |  
+| /simpleundo <number> | /su < number> | <number>に書かれた数だけ操作を取り消します |  
   
 ## Config  
 
