@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace rark\simple_fill\task;
 
-use pocketmine\block\Air;
 use pocketmine\block\Block;
+use pocketmine\block\VanillaBlocks;
 use pocketmine\player\Player;
 use pocketmine\scheduler\Task;
 use rark\simple_fill\effect\Messages;
@@ -17,8 +17,9 @@ class BlockPlaceTask extends Task{
 	const PLACE_SPEED = 4;
 	protected ?Player $player;
 	/** @var Block[] */
-	protected ?array $blocks;
+	protected ?array $blocks = [];
 	protected ?Container $backup = null;
+	protected bool $is_killed = false;
 
 	public function __construct(Container $container, ?Player $player){
 		$this->blocks = $container->getBlocks();
@@ -27,7 +28,17 @@ class BlockPlaceTask extends Task{
 
 		if($key === null or !isset($this->blocks[$key])) return;
 		$backup = clone $container;
-		$backup->loadBlocks($this->blocks[$key]->getPosition()->getWorld());
+
+		try{
+			$backup->loadBlocks($this->blocks[$key]->getPosition()->getWorld());
+
+		}catch(\Exception){
+			$this->is_killed = true;
+
+			if($this->player === null) return;
+			Messages::sendMessage($player, Messages::ERR_SIZE);
+			return;
+		}
 		$this->backup = $backup;
 
 		if($this->player === null) return;
@@ -36,6 +47,10 @@ class BlockPlaceTask extends Task{
 	}
 
 	public function onRun():void{
+		if($this->is_killed){
+			$this->stop();
+			return;
+		}
 		for($i = self::PLACE_AMOUNT; $i > 0; --$i){
 			if(count($this->blocks) < 1){
 				$this->stop();
@@ -48,15 +63,14 @@ class BlockPlaceTask extends Task{
 
 		if($this->player === null) return;
 		if($block === null) return;
-		$block instanceof Air?
-			Sounds::blockBreakSound($this->player):
-			Sounds::blockPlaceSound($this->player, $block);
+		Sounds::blockPlaceSound($this->player, $block->isSameState(VanillaBlocks::AIR())? VanillaBlocks::OAK_WOOD(): $block);
 	}
 
 	public function stop():void{
+		$this->is_killed = true;
 		$this->player = null;
 		$this->blocks = null;
-		$this->getHandler()->cancel();
+		$this->getHandler()?->cancel();
 	}
 
 	public function rollback():void{

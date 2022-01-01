@@ -11,6 +11,7 @@ use rark\simple_fill\task\RunningTasks;
 use rark\simple_fill\utils\VectorUtils;
 
 class Container{
+	const ALLOWED_SIZE = 10000;
 	protected Vector3 $min;
 	protected Vector3 $max;
 	protected Vector3 $pointer;
@@ -38,7 +39,6 @@ class Container{
 	}
 
 	public function setPointer(Vector3 $pointer):void{
-		if(!$this->isVectorInside($pointer)) throw new \InvalidArgumentException('pointer must be inside a container');
 		$this->pointer = $pointer;
 	}
 
@@ -95,6 +95,7 @@ class Container{
 	}
 
 	public function loadBlocks(World $world):void{
+		if($this->getSize() > self::ALLOWED_SIZE) throw new \RuntimeException('Container size is too large');
 		foreach($this->foreach() as $v){
 			$block =  $world->getBlock($v);
 			$block->position($world, (int) $v->x, (int) $v->y, (int) $v->z);
@@ -116,5 +117,9 @@ class Container{
 			$pos = $block->getPosition();
 			$pos->getWorld()->setBlock($pos->asVector3(), $block);
 		}
+	}
+
+	public function getSize():int{
+		return ($this->max->x - $this->min->x) * ($this->max->y - $this->min->y) * ($this->max->z - $this->min->z);
 	}
 }

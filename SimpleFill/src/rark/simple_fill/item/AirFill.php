@@ -68,9 +68,8 @@ class AirFill implements SFTool{
 			Messages::sendMessage($player, Messages::ERR_CONTAINER);
 			return;
 		}
-		self::saveLog($player, clone $container);
 		$container->fill(VanillaBlocks::AIR(), $player->getPosition()->getWorld());
-		$container->place();
+		$container->place($player);
 		ContainerPool::clearContainer($player);
 	}
 

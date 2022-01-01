@@ -20,6 +20,7 @@ abstract class Messages{
 	const PLZ_EXEC_IN_GAME = TextFormat::RED.'ゲーム内で実行してください';
 	const ERR_CONTAINER = TextFormat::RED.'Containerを取得できませんでした';
 	const ERR_COUNT = TextFormat::RED.'Undoのカウントは1以上である必要があります';
+	const ERR_SIZE = TextFormat::RED.'Fillのサイズが大きすぎます';
 
 	public static function getUndoMessage(int $count):string{
 		return TextFormat::GREEN.number_format($count).self::UNDO;

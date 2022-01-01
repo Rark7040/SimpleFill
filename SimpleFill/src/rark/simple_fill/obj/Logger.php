@@ -9,7 +9,7 @@ use rark\simple_fill\effect\Messages;
 abstract class Logger{
 	final private function __construct(){/** NOOP */}
 	const MAX_LOG_COUNT = 30;
-	/** @var Container[] */
+	/** @var Container[][] */
 	protected static array $log = [];
 
 	/** @return Container[] */
@@ -34,7 +34,7 @@ abstract class Logger{
 		if($len < 1) throw new \InvalidArgumentException('$len must be more then 1');
 		$name = $player->getName();
 
-		if(!isset(self::$log[$name])) return [];
+		if(!isset(self::$log[$name]) or !is_array(self::$log[$name])) return [];
 		$return_log = [];
 
 		for(; $len > 0; --$len) $return_log[] = array_pop(self::$log[$name]);
