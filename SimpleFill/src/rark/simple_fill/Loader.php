@@ -29,7 +29,6 @@ class Loader extends PluginBase{
 		if(!PacketHooker::isRegistered()) PacketHooker::register($this);
 		self::$task_scheduler = $this->getScheduler();
 		$this->initItems();
-		$this->initConf();
 		$this->applyConfData();
 		EventListener::init();
 		$this->getServer()->getPluginManager()->registerEvents(new EventListener, $this);
@@ -55,11 +54,8 @@ class Loader extends PluginBase{
 		AirFill::init();
 	}
 
-	protected function initConf():void{
-		if(!$this->saveResource(self::CONF_NAME)) throw new \RuntimeException(Errors::FAILED_LOAD_CONFIG);
-	}
-
 	protected function applyConfData():void{
+		$this->saveResource(self::CONF_NAME);
 		$conf = $this->getConfig();
 		RunningTasks::init((int) $conf->get(self::PLACE_SPEED, null)?? throw new \RuntimeException(Errors::NOT_FOUND_PLACE_SPEED));
 		BlockPlaceTask::init((int) $conf->get(self::FILL_SIZE, null)?? throw new \RuntimeException(Errors::NOT_FOUND_FILL_SIZE));
