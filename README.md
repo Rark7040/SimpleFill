@@ -16,12 +16,5 @@
 |---|---|---|
 | /simplefill | /sf | Fillモードを切り替えるアイテムをプレイヤーに付与します |
 | /simpleundo <number> | /su < number> | <number>に書かれた数だけ操作を取り消します |  
-  
-## Config  
-
-| 設定項目 | 値 | 説明 |
-|---|---|---|
-| UseType | true or false | Tapをtrueにするとアイテムをもって右クリックで、<br>スニークだとアイテムをもってスニークでFillモードを切り替え |
-| Undo | 半角自然数 | Undoが可能なFill履歴の保存サイズです |
 
 
