@@ -41,7 +41,7 @@ class SimpleFillCommand extends BaseCommand{
 		}
 		if(!Server::getInstance()->isOp($sender->getName())) return;
 		if(isset($args[self::ARG_MODE])){
-			(bool) $args[self::ARG_MODE]? SwitchMode::onReceiveOn($sender): SwitchMode::onReceiveOff($sender);
+			(bool) $args[self::ARG_MODE]? SwitchMode::onReceiveOff($sender): SwitchMode::onReceiveOn($sender);
 			return;
 		}
 		$sender->getInventory()->addItem(SwitchMode::get($sender), AirFill::get());
