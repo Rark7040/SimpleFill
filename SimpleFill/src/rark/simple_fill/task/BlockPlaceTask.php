@@ -79,6 +79,6 @@ class BlockPlaceTask extends Task{
 	}
 
 	public function rollback():void{
-		$this->backup->forcePlace();
+		$this->backup?->forcePlace();
 	}
 }

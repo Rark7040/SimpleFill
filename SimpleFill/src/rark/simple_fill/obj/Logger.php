@@ -14,7 +14,7 @@ abstract class Logger{
 	protected static array $log = [];
 
 	public static function init(int $save_log_size):void{
-		if(self::$save_log_size < 1) throw new \InvalidArgumentException(Errors::INVALID_SAVE_LOG_SIZE);
+		if($save_log_size < 1) throw new \InvalidArgumentException(Errors::INVALID_SAVE_LOG_SIZE);
 		self::$save_log_size = $save_log_size;
 	}
 

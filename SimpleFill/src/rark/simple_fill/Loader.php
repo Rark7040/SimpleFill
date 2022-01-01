@@ -7,6 +7,7 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\scheduler\TaskScheduler;
 use rark\simple_fill\command\SimpleFillCommand;
 use rark\simple_fill\command\SimpleUndoCommand;
+use rark\simple_fill\effect\Errors;
 use rark\simple_fill\handler\EventListener;
 use rark\simple_fill\item\AirFill;
 use rark\simple_fill\item\SwitchMode;
@@ -55,15 +56,14 @@ class Loader extends PluginBase{
 	}
 
 	protected function initConf():void{
-		$this->reloadConfig();
-		if($this->saveResource(self::CONF_NAME)) throw new \RuntimeException('failed to load config file');
+		if(!$this->saveResource(self::CONF_NAME)) throw new \RuntimeException(Errors::FAILED_LOAD_CONFIG);
 	}
 
 	protected function applyConfData():void{
 		$conf = $this->getConfig();
-		RunningTasks::init((int) $conf->get(self::PLACE_SPEED, null)?? throw new \RuntimeException(''));
-		BlockPlaceTask::init((int) $conf->get(self::FILL_SIZE, null)?? throw new \RuntimeException(''));
-		Logger::init((int) $conf->get(self::SAVE_LOG_SIZE, null)?? throw new \RuntimeException(''));
-		Container::init((int) $conf->get(self::MAX_FILL_SIZE, null)?? throw new \RuntimeException(''));
+		RunningTasks::init((int) $conf->get(self::PLACE_SPEED, null)?? throw new \RuntimeException(Errors::NOT_FOUND_PLACE_SPEED));
+		BlockPlaceTask::init((int) $conf->get(self::FILL_SIZE, null)?? throw new \RuntimeException(Errors::NOT_FOUND_FILL_SIZE));
+		Logger::init((int) $conf->get(self::SAVE_LOG_SIZE, null)?? throw new \RuntimeException(Errors::NOT_FOUND_SAVE_LOG_SIZE));
+		Container::init((int) $conf->get(self::MAX_FILL_SIZE, null)?? throw new \RuntimeException(Errors::NOT_FOUND_MAX_FILL_SIZE));
 	}
 }

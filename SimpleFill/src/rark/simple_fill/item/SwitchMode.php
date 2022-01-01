@@ -27,7 +27,7 @@ class SwitchMode implements SFTool{
 		self::$on = VanillaItems::BOW();
 		self::$off = VanillaItems::BOW();
 		self::$on = self::$on->setCustomName(self::ON_NAME)->addEnchantment(new EnchantmentInstance(VanillaEnchantments::PROTECTION(), 1));
-		self::$off = self::$off->setCustomName(self::OFF_NAME)->addEnchantment(new EnchantmentInstance(VanillaEnchantments::PROTECTION(), 1));
+		self::$off = self::$off->setCustomName(self::OFF_NAME);
 	}
 
 	public static function get(Player $player):Item{
