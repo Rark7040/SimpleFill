@@ -9,6 +9,7 @@ use pocketmine\math\Vector2;
 use pocketmine\math\Vector3;
 use pocketmine\Server;
 use pocketmine\world\Position;
+use rark\simple_fill\effect\Errors;
 
 abstract class VectorUtils{
 	final private function __construct(){/** NOOP */}
@@ -89,7 +90,7 @@ abstract class VectorUtils{
 
 	public static function arrayToPosition(array $array):?Position{
 		try{
-			$world = Server::getInstance()->getWorldManager()->getWorldByName($array['world'])?? throw new ErrorException('world is null');
+			$world = Server::getInstance()->getWorldManager()->getWorldByName($array['world'])?? throw new ErrorException(Errors::WORLD_IS_NULL);
 			return new Position((float) $array['x'], (float) $array['y'], (float) $array['z'], $world);
 			
 		}catch(\Exception){

@@ -4,13 +4,19 @@ declare(strict_types = 1);
 namespace rark\simple_fill\obj;
 
 use pocketmine\player\Player;
+use rark\simple_fill\effect\Errors;
 use rark\simple_fill\effect\Messages;
 
 abstract class Logger{
 	final private function __construct(){/** NOOP */}
-	const MAX_LOG_COUNT = 30;
+	protected static int $save_log_size;
 	/** @var Container[][] */
 	protected static array $log = [];
+
+	public static function init(int $save_log_size):void{
+		if(self::$save_log_size < 1) throw new \InvalidArgumentException(Errors::INVALID_SAVE_LOG_SIZE);
+		self::$save_log_size = $save_log_size;
+	}
 
 	/** @return Container[] */
 	public static function getAllLog(Player $player):array{
@@ -25,13 +31,13 @@ abstract class Logger{
 		$log = self::getAllLog($player);
 		$log[] = $blocks;
 
-		if(count($log) > self::MAX_LOG_COUNT) array_shift($log);
+		if(count($log) > self::$save_log_size) array_shift($log);
 		self::setLog($player, $log);
 	}
 
 	/** @return Container[] */
 	public static function getLog(Player $player, int $len):array{
-		if($len < 1) throw new \InvalidArgumentException('$len must be more then 1');
+		if($len < 1) throw new \InvalidArgumentException(Errors::INVALID_LENGTH);
 		$name = $player->getName();
 
 		if(!isset(self::$log[$name]) or !is_array(self::$log[$name])) return [];

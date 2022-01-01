@@ -7,11 +7,12 @@ use pocketmine\block\Block;
 use pocketmine\math\Vector3;
 use pocketmine\player\Player;
 use pocketmine\world\World;
+use rark\simple_fill\effect\Errors;
 use rark\simple_fill\task\RunningTasks;
 use rark\simple_fill\utils\VectorUtils;
 
 class Container{
-	const ALLOWED_SIZE = 10000;
+	protected static int $allowed_size;
 	protected Vector3 $min;
 	protected Vector3 $max;
 	protected Vector3 $pointer;
@@ -23,6 +24,11 @@ class Container{
 		$this->min = $min;
 		$this->max = $max;
 		$this->pointer = $min;
+	}
+
+	public static function init(int $max_fill_size):void{
+		if($max_fill_size < 1)  throw new \InvalidArgumentException(Errors::INVALID_MAX_FILL_SIZE);
+		self::$allowed_size = $max_fill_size;
 	}
 
 	public function getMin():Vector3{
@@ -95,7 +101,7 @@ class Container{
 	}
 
 	public function loadBlocks(World $world):void{
-		if($this->getSize() > self::ALLOWED_SIZE) throw new \RuntimeException('Container size is too large');
+		if($this->getSize() > self::$allowed_size) throw new \RuntimeException(Errors::INVALID_CONTAINER_SIZE);
 		foreach($this->foreach() as $v){
 			$block =  $world->getBlock($v);
 			$block->position($world, (int) $v->x, (int) $v->y, (int) $v->z);

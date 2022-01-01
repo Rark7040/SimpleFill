@@ -7,14 +7,14 @@ use pocketmine\block\Block;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\player\Player;
 use pocketmine\scheduler\Task;
+use rark\simple_fill\effect\Errors;
 use rark\simple_fill\effect\Messages;
 use rark\simple_fill\effect\Sounds;
 use rark\simple_fill\obj\Container;
 use rark\simple_fill\obj\Logger;
 
 class BlockPlaceTask extends Task{
-	const PLACE_AMOUNT = 100;
-	const PLACE_SPEED = 4;
+	protected static int $fill_size;
 	protected ?Player $player;
 	/** @var Block[] */
 	protected ?array $blocks = [];
@@ -46,12 +46,17 @@ class BlockPlaceTask extends Task{
 		Messages::sendMessage($player, Messages::START_FILL);
 	}
 
+	public static function init(int $fill_size):void{
+		if($fill_size < 1) throw new \InvalidArgumentException(Errors::INVALID_FILL_SIZE);
+		self::$fill_size = $fill_size;
+	}
+
 	public function onRun():void{
 		if($this->is_killed){
 			$this->stop();
 			return;
 		}
-		for($i = self::PLACE_AMOUNT; $i > 0; --$i){
+		for($i = self::$fill_size; $i > 0; --$i){
 			if(count($this->blocks) < 1){
 				$this->stop();
 				break;
