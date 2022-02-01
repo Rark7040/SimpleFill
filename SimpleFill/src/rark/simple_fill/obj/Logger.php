@@ -43,7 +43,12 @@ abstract class Logger{
 		if(!isset(self::$log[$name]) or !is_array(self::$log[$name])) return [];
 		$return_log = [];
 
-		for(; $len > 0; --$len) $return_log[] = array_pop(self::$log[$name]);
+		for(; $len > 0; --$len){
+			$container = array_pop(self::$log[$name]);
+
+			if(!$container instanceof Container) continue;
+			$return_log[] = $container;
+		}
 		return $return_log;
 	}
 
