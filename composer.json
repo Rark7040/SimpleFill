@@ -1,0 +1,11 @@
+{
+    "name": "rark/simple-fill",
+    "description": "",
+    "license": "mozilla",
+    "require": {
+        "php": "8.*",
+        "php-64bit": "*",
+        "pocketmine/pocketmine-mp": "^4.0.0",
+        "phpstan/phpstan": "*"
+    }
+}
