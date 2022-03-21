@@ -16,4 +16,3 @@ class BlockBreakHandler implements BaseHandler{
 		if(!$ev instanceof BlockBreakEvent) return;
 		AirFill::useOnBlock($ev->getPlayer(), $ev->getItem(), $ev->getBlock());
 	}
-}
